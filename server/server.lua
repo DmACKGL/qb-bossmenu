@@ -100,7 +100,7 @@ AddEventHandler("qb-bossmenu:server:openMenu", function()
             Accounts[job.name] = 0
         end
 
-        QBCore.Functions.ExecuteSql(true, "SELECT * FROM `players` WHERE `job` LIKE '%".. job.name .."%'", function(players)
+        QBCore.Functions.ExecuteSql(true, {['a'] = "%"..job.name.."%"}, "SELECT * FROM `players` WHERE `job` LIKE @a", function(players)
             if players[1] ~= nil then
                 for key, value in pairs(players) do
                     local isOnline = QBCore.Functions.GetPlayerByCitizenId(value.citizenid)
@@ -147,7 +147,7 @@ AddEventHandler('qb-bossmenu:server:fireEmployee', function(data)
 
             Wait(500)
             local employees = {}
-            QBCore.Functions.ExecuteSql(false, "SELECT * FROM `players` WHERE `job` LIKE '%".. xPlayer.PlayerData.job.name .."%'", function(players)
+            QBCore.Functions.ExecuteSql(false, {['a'] = "%"..xPlayer.PlayerData.job.name.."%"}, "SELECT * FROM `players` WHERE `job` LIKE @a", function(players)
                 if players[1] ~= nil then
                     for key, value in pairs(players) do
                         local isOnline = QBCore.Functions.GetPlayerByCitizenId(value.citizenid)
@@ -175,7 +175,7 @@ AddEventHandler('qb-bossmenu:server:fireEmployee', function(data)
             TriggerClientEvent('QBCore:Notify', src, "Error.", "error")
         end
     else
-        QBCore.Functions.ExecuteSql(false, "SELECT * FROM `players` WHERE `citizenid` = '" .. data.source .. "' LIMIT 1", function(player)
+        QBCore.Functions.ExecuteSql(false, {['a'] = data.source}, "SELECT * FROM `players` WHERE `citizenid` = @a LIMIT 1", function(player)
             if player[1] ~= nil then
                 xEmployee = player[1]
 
@@ -189,13 +189,13 @@ AddEventHandler('qb-bossmenu:server:fireEmployee', function(data)
 	            job.grade.name = nil
                 job.grade.level = 0
 
-                QBCore.Functions.ExecuteSql(false, "UPDATE `players` SET `job` = '"..json.encode(job).."' WHERE `citizenid` = '".. data.source .."'")
-                TriggerClientEvent('QBCore:Notify', src, "Fired successfully!", "success")
+                QBCore.Functions.ExecuteSql(false, {['a'] = json.encode(job), ['b']= data.source}, "UPDATE `players` SET `job` = @a WHERE `citizenid` = @b")
+                TriggerClientEvent('QBCore:Notify', src, "Ciudadano despedido!", "success")
                 TriggerEvent('cash_logs:server:createLog', 'bossmenu', 'Fire', "Successfully fired " .. data.source .. ' (' .. xPlayer.PlayerData.job.name .. ')', src)
                 
                 Wait(500)
                 local employees = {}
-                QBCore.Functions.ExecuteSql(false, "SELECT * FROM `players` WHERE `job` LIKE '%".. xPlayer.PlayerData.job.name .."%'", function(players)
+                QBCore.Functions.ExecuteSql(false, {['a'] = "%"..xPlayer.PlayerData.job.name.."%"}, "SELECT * FROM `players` WHERE `job` LIKE @a", function(players)
                     if players[1] ~= nil then
                         for key, value in pairs(players) do
                             local isOnline = QBCore.Functions.GetPlayerByCitizenId(value.citizenid)
@@ -257,7 +257,7 @@ AddEventHandler('qb-bossmenu:server:updateGrade', function(data)
 
             Wait(500)
             local employees = {}
-            QBCore.Functions.ExecuteSql(false, "SELECT * FROM `players` WHERE `job` LIKE '%".. xPlayer.PlayerData.job.name .."%'", function(players)
+            QBCore.Functions.ExecuteSql(false, {['a'] = "%"..xPlayer.PlayerData.job.name.."%"}, "SELECT * FROM `players` WHERE `job` LIKE @a", function(players)
                 if players[1] ~= nil then
                     for key, value in pairs(players) do
                         local isOnline = QBCore.Functions.GetPlayerByCitizenId(value.citizenid)
@@ -286,7 +286,7 @@ AddEventHandler('qb-bossmenu:server:updateGrade', function(data)
             TriggerClientEvent('QBCore:Notify', src, "Error.", "error")
         end
     else
-        QBCore.Functions.ExecuteSql(false, "SELECT * FROM `players` WHERE `citizenid` = '" .. data.source .. "' LIMIT 1", function(player)
+        QBCore.Functions.ExecuteSql(false, {['a'] = data.source}, "SELECT * FROM `players` WHERE `citizenid` = @a LIMIT 1", function(player)
             if player[1] ~= nil then
                 xEmployee = player[1]
                 local job = QBCore.Shared.Jobs[xPlayer.PlayerData.job.name]
@@ -297,7 +297,7 @@ AddEventHandler('qb-bossmenu:server:updateGrade', function(data)
                 
                 Wait(500)
                 local employees = {}
-                QBCore.Functions.ExecuteSql(false, "SELECT * FROM `players` WHERE `job` LIKE '%".. xPlayer.PlayerData.job.name .."%'", function(players)
+                QBCore.Functions.ExecuteSql(false, {['a'] = "%"..xPlayer.PlayerData.job.name.."%"}, "SELECT * FROM `players` WHERE `job` LIKE @a", function(players)
                     if players[1] ~= nil then
                         for key, value in pairs(players) do
                             local isOnline = QBCore.Functions.GetPlayerByCitizenId(value.citizenid)
